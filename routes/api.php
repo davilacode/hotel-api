@@ -1,8 +1,12 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\HotelsController;
+use App\Http\Controllers\Api\RoomsController;
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+
+Route::apiResource('hotels', HotelsController::class);
+
+Route::apiResource('hotels/{id}/rooms', RoomsController::class);
+
+Route::get('rooms', [RoomsController::class, 'all']);
