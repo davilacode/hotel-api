@@ -14,7 +14,7 @@ class HotelsController extends Controller
      */
     public function index()
     {
-        $hotels = Hotels::all();
+        $hotels = Hotels::orderBy('id', 'DESC')->get();
         return response()->json($hotels);
     }
 
@@ -55,7 +55,12 @@ class HotelsController extends Controller
             return response()->json(['message' => 'Hotel not found'], 404);
         }
 
-        return response()->json($hotel);
+        $totalRooms = $hotel->rooms()->sum('quantity');
+
+        return response()->json([
+            'hotel' => $hotel,
+            'total_rooms_created' => $totalRooms
+        ]);
     }
 
     /**
@@ -73,10 +78,10 @@ class HotelsController extends Controller
         }
 
         $request->validate([
-            'name' => 'unique:hotels,name|sometimes|required|string|max:255',
+            'name' => 'sometimes|required|string|max:255',
             'address' => 'sometimes|required|string|max:255',
             'city' => 'sometimes|required|string|max:255',
-            'nit' => 'unique:hotels,nit|sometimes|required|string|max:255',
+            'nit' => 'sometimes|required|string|max:255',
             'total_rooms' => 'sometimes|required|integer|min:1',
         ]);
 
