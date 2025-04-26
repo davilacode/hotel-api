@@ -46,7 +46,7 @@ class RoomsController extends Controller
 
         $hotel = Hotels::find($hotelId);
         if (!$hotel) {
-            return response()->json(['error' => 'Hotel not found'], 404);
+            return response()->json(['message' => 'Hotel not found'], 404);
         }
 
         $request->validate([
@@ -76,13 +76,13 @@ class RoomsController extends Controller
             ->exists();
 
         if ($roomExists) {
-            return response()->json(['error' => 'Room type already exists'], 422);
+            return response()->json(['message' => 'Room type already exists'], 422);
         }
 
         $totalRooms = Rooms::where('hotel_id', $hotelId)->sum('quantity');
 
         if ($totalRooms + $request->quantity > $hotel->total_rooms) {
-            return response()->json(['error' => 'Total rooms exceed hotel capacity'], 422);
+            return response()->json(['message' => 'Total rooms exceed hotel capacity'], 422);
         }
 
 
@@ -91,7 +91,7 @@ class RoomsController extends Controller
         $room->save();
 
         if (!$room) {
-            return response()->json(['error' => 'Room not created'], 500);
+            return response()->json(['message' => 'Room not created'], 500);
         }
 
         return response()->json($room, 201);
@@ -109,7 +109,7 @@ class RoomsController extends Controller
         $room = Rooms::where('hotel_id', $hotelId)->find($id);
 
         if (!$room) {
-            return response()->json(['error' => 'Room not found'], 404);
+            return response()->json(['message' => 'Room not found'], 404);
         }
 
         return response()->json($room);
@@ -127,12 +127,12 @@ class RoomsController extends Controller
     {
         $hotel = Hotels::find($hotelId);
         if (!$hotel) {
-            return response()->json(['error' => 'Hotel not found'], 404);
+            return response()->json(['message' => 'Hotel not found'], 404);
         }
 
         $room = Rooms::where('hotel_id', $hotelId)->find($id);
         if (!$room) {
-            return response()->json(['error' => 'Room not found'], 404);
+            return response()->json(['message' => 'Room not found'], 404);
         }
 
         $request->validate([
@@ -163,17 +163,17 @@ class RoomsController extends Controller
             ->where('accommodation', $request->accommodation)
             ->exists();
         if ($roomExists) {
-            return response()->json(['error' => 'Room type already exists'], 422);
+            return response()->json(['message' => 'Room type already exists'], 422);
         }
 
         $totalRooms = Rooms::where('hotel_id', $hotelId)->sum('quantity');
         if ($totalRooms + ($request->quantity - $room->quantity) > $hotel->total_rooms) {
-            return response()->json(['error' => 'Total rooms exceed hotel capacity'], 422);
+            return response()->json(['message' => 'Total rooms exceed hotel capacity'], 422);
         }
 
         $room->update($request->all());
         if (!$room) {
-            return response()->json(['error' => 'Room not updated'], 500);
+            return response()->json(['message' => 'Room not updated'], 500);
         }
 
         return response()->json($room);
@@ -190,13 +190,13 @@ class RoomsController extends Controller
     {
         $room = Rooms::where('hotel_id', $hotelId)->find($id);
         if (!$room) {
-            return response()->json(['error' => 'Room not found'], 404);
+            return response()->json(['message' => 'Room not found'], 404);
         }
 
         $room->delete();
 
         if (!$room) {
-            return response()->json(['error' => 'Room not deleted'], 500);
+            return response()->json(['message' => 'Room not deleted'], 500);
         }
 
         return response()->json(['message' => 'Room deleted successfully']);
